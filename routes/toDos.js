@@ -2,17 +2,15 @@ const express = require('express');
 const router = express.Router();
 const ToDo = require('../models/ToDo')
 const mongoose = require('mongoose')
+const ToDos = mongoose.model("ToDo", ToDo.schema)
 
 router.get('/get', async (req, res) => {
     //Database connection
-const options = {
-    useUnifiedTopology:true,
-    useNewUrlParser: true
-}
-    
+    const options = {
+        useUnifiedTopology:true,
+        useNewUrlParser: true
+    }
     mongoose.connect(process.env.DB_CONNECTION, options,  (err,db)=>{
-        
-        let ToDos = mongoose.model("ToDo", ToDo.schema)
         ToDos.find({}, (error, data)=>{
             if(error){
                 console.log(error)
@@ -22,11 +20,8 @@ const options = {
                 res.json(data)
             }
         })
-
-    })
-    
-    
-    
+        
+    })    
 });
 router.post('/post', (req, res) => {
     const toDo = new ToDo({
@@ -48,7 +43,8 @@ router.put('/put', (req, res) => {
     res.send("Working put")
 });
 router.delete('/delete', (req, res) => {
-    res.send("Working delete")
+    ToDos.deleteOne({_id: req.body.ID}, (err)=>{if(err)console.log(err)})
+    res.send("Deleted")
 });
 
 module.exports = router;
