@@ -3,15 +3,20 @@ const router = express.Router();
 const ToDo = require('../models/ToDo')
 const mongoose = require('mongoose')
 const ToDos = mongoose.model("ToDo", ToDo.schema)
+const urlRegex = /[^get/]*$/
 
-router.get('/get', async (req, res) => {
+router.get('/get/:date', async (req, res) => {
     //Database connection
     const options = {
         useUnifiedTopology:true,
         useNewUrlParser: true
     }
+    let date = req.url.match(urlRegex)[0]
+    
+    
+    
     mongoose.connect(process.env.DB_CONNECTION, options,  (err,db)=>{
-        ToDos.find({}, (error, data)=>{
+        ToDos.find({date:date}, (error, data)=>{
             if(error){
                 console.log(error)
                 res.json({message: "Error happened while fetching data, try again by refreshing page"})
@@ -27,8 +32,7 @@ router.post('/post', (req, res) => {
     const toDo = new ToDo({
         name: req.body.name,
         date: req.body.date,
-        time: req.body.time,
-        duration: req.body.duration
+        time: req.body.time
     })
     console.log(toDo)
     toDo.save()

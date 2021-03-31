@@ -13,8 +13,7 @@ const ToDoSchema = mongoose.Schema({
     time: {
         type: String,
         required: true
-    },
-    duration: Number
+    }
 
 })
 
