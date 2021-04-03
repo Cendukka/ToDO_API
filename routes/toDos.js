@@ -13,8 +13,6 @@ router.get('/get/:date', async (req, res) => {
     }
     let date = req.url.match(urlRegex)[0]
     
-    
-    
     mongoose.connect(process.env.DB_CONNECTION, options,  (err,db)=>{
         ToDos.find({date:date}, (error, data)=>{
             if(error){
